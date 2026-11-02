@@ -1,5 +1,5 @@
-url: https://github.com/lucien/dsh-session-overview   # ← 改成你实际的仓库地址
-name: lucien/dsh-session-overview                      # ← 同步改成 owner/repo
+url: https://github.com/flyeasy/dsh-session-overview   # ← 改成你实际的仓库地址
+name: flyeasy/dsh-session-overview                      # ← 同步改成 owner/repo
 category: session
 description:
   en: One recency-sorted list of recent sessions across all workspaces, with color-coded workspace badges, a collapsible sidebar section, and the built-in session row actions on right-click.
