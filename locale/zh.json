@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "title": "会话总览",
+    "description": "在一个列表里浏览所有工作区的最近会话，并用带颜色的小底标标明每个会话来自哪个工作区。"
+  },
+  "panel": "全部会话",
+  "title": "最近会话",
+  "search": "搜索会话或工作区…",
+  "empty": "还没有会话",
+  "noMatch": "没有匹配的会话",
+  "ungrouped": "未分组",
+  "running": "运行中",
+  "showMore": "显示更多",
+  "showLess": "收起",
+  "count": "{n} 个会话"
+}

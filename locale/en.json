@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "title": "Session Overview",
+    "description": "Browse recent sessions across all workspaces in one list, with a color-coded badge showing which workspace each session belongs to."
+  },
+  "panel": "All sessions",
+  "title": "Recent sessions",
+  "search": "Search sessions or workspaces…",
+  "empty": "No sessions yet",
+  "noMatch": "No matching sessions",
+  "ungrouped": "Ungrouped",
+  "running": "Running",
+  "showMore": "Show more",
+  "showLess": "Show less",
+  "count": "{n} sessions"
+}
