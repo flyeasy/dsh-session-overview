@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-  id: '@local/session-overview',
+  id: 'dsh-session-overview',
   factory(require) {
     const React = require('react');
     const h = React.createElement;
