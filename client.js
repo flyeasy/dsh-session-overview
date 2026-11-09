@@ -100,7 +100,7 @@ window.__ModuleLoader__.load({
       .${NS}-tab-chev { flex: none; font-size: 10px; color: var(--dsw-alias-label-secondary); transition: transform 0.15s ease; }
       .${NS}-tab-chev.open { transform: rotate(90deg); }
       .${NS}-side-list { display: flex; flex-direction: column; box-sizing: border-box; padding: 4px;
-        max-height: 238px; overflow-y: auto; overscroll-behavior: contain;
+        max-height: 232px; overflow-y: auto; overscroll-behavior: contain;
         background: var(--dsw-alias-bg-layer-1); border: 1px solid var(--dsw-alias-border-l1); border-top: none;
         border-radius: 0 10px 10px 10px;
         box-shadow: 0 1px 2px color-mix(in srgb, var(--dsw-alias-label-primary) 5%, transparent); }
