@@ -78,28 +78,43 @@ window.__ModuleLoader__.load({
         color: var(--dsw-alias-label-secondary); background: var(--dsw-alias-bg-layer-1);
         border: 1px solid var(--dsw-alias-border-l1); border-radius: 999px; cursor: pointer; }
       .${NS}-more:hover { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-2); }
-      .${NS}-side { border-top: 1px solid var(--dsw-alias-border-l1); }
-      .${NS}-side-head { display: flex; align-items: center; gap: 6px; width: auto; box-sizing: border-box;
-        margin: 8px 8px 4px; padding: 6px 10px; font: inherit; font-size: 14px; font-weight: 600;
-        color: var(--dsw-alias-brand-primary); background: color-mix(in srgb, var(--dsw-alias-brand-primary) 12%, transparent);
-        border: none; border-radius: var(--dsw-radius-md, 8px); cursor: pointer; text-align: left; }
-      .${NS}-side-head:hover { background: color-mix(in srgb, var(--dsw-alias-brand-primary) 14%, transparent); }
-      .${NS}-side-head:focus-visible { outline: var(--dsw-focus-ring-width, 2px) solid var(--dsw-alias-brand-primary); outline-offset: -2px; }
-      .${NS}-side-chev { flex: none; transition: transform 0.15s ease; font-size: 10px; }
-      .${NS}-side-chev.open { transform: rotate(90deg); }
-      .${NS}-side-count { margin-left: auto; font-weight: 400; opacity: 0.7; }
-      .${NS}-side-list { display: flex; flex-direction: column; padding: 2px 0 6px; max-height: 238px; overflow-y: auto; overscroll-behavior: contain; }
-      .${NS}-side-row { display: flex; align-items: center; gap: 6px; width: calc(100% - 8px); box-sizing: border-box; text-align: left;
-        height: 32px; margin: 0 4px; padding: 0 8px; font: inherit; font-size: 14px; color: inherit; background: transparent;
-        border: none; border-radius: var(--dsw-radius-md); cursor: pointer; }
+      .${NS}-side { margin-top: 10px; }
+      /* ---- pull-out archive card ---- */
+      .${NS}-tab { display: flex; align-items: center; gap: 6px; width: 100%; box-sizing: border-box;
+        height: 30px; padding: 0 8px 0 9px; font: inherit; font-size: 14px; font-weight: 600;
+        color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-1);
+        border: 1px solid var(--dsw-alias-border-l1); border-bottom: none; border-radius: 10px 10px 0 0;
+        cursor: pointer; text-align: left; }
+      .${NS}-tab:hover { background: var(--dsw-alias-bg-layer-2); }
+      .${NS}-tab:focus-visible { outline: var(--dsw-focus-ring-width, 2px) solid var(--dsw-alias-brand-primary); outline-offset: -2px; }
+      .${NS}-tab.closed { height: 34px; border-bottom: 1px solid var(--dsw-alias-border-l1);
+        border-radius: 10px; box-shadow: 0 1px 2px color-mix(in srgb, var(--dsw-alias-label-primary) 5%, transparent); }
+      .${NS}-tab-bar { width: 4px; height: 14px; border-radius: 2px; flex: none; background: var(--dsw-alias-brand-primary); }
+      .${NS}-tab-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .${NS}-tab-count { flex: none; padding: 1px 6px; border-radius: 999px; font-size: 11px; font-weight: 600;
+        color: var(--dsw-alias-label-secondary); background: var(--dsw-alias-bg-layer-2); line-height: 14px; }
+      .${NS}-tab-spacer { flex: 1; }
+      .${NS}-tab-all { flex: none; padding: 2px 5px; border-radius: 5px; font-size: 11px; font-weight: 500;
+        color: var(--dsw-alias-label-secondary); }
+      .${NS}-tab-all:hover { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-interactive-bg-hover); }
+      .${NS}-tab-chev { flex: none; font-size: 10px; color: var(--dsw-alias-label-secondary); transition: transform 0.15s ease; }
+      .${NS}-tab-chev.open { transform: rotate(90deg); }
+      .${NS}-side-list { display: flex; flex-direction: column; box-sizing: border-box; padding: 4px;
+        max-height: 238px; overflow-y: auto; overscroll-behavior: contain;
+        background: var(--dsw-alias-bg-layer-1); border: 1px solid var(--dsw-alias-border-l1); border-top: none;
+        border-radius: 0 10px 10px 10px;
+        box-shadow: 0 1px 2px color-mix(in srgb, var(--dsw-alias-label-primary) 5%, transparent); }
+      .${NS}-side-row { display: flex; align-items: center; gap: 6px; width: 100%; box-sizing: border-box;
+        height: 32px; padding: 0 8px; font: inherit; font-size: 14px; line-height: 22px; color: inherit;
+        background: transparent; border: none; border-radius: var(--dsw-radius-md); cursor: pointer; text-align: left; }
       .${NS}-side-row:hover { background: var(--dsw-alias-interactive-bg-hover); }
       .${NS}-side-row.selected { background: color-mix(in srgb, var(--dsw-alias-brand-primary) 9%, transparent); }
       .${NS}-side-row.selected:hover { background: color-mix(in srgb, var(--dsw-alias-brand-primary) 14%, transparent); }
       .${NS}-side-row-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .${NS}-side-row-title.running { font-weight: 600; }
       .${NS}-side-dot { width: 7px; height: 7px; border-radius: 999px; flex: none; }
-      .${NS}-side-time { color: var(--dsw-alias-label-secondary); font-size: 12px; flex: none; }
-      .${NS}-side-empty { padding: 4px 14px 8px 18px; font-size: 12px; color: var(--dsw-alias-label-secondary); }
+      .${NS}-side-time { color: var(--dsw-alias-label-secondary); font-size: 11px; flex: none; }
+      .${NS}-side-empty { padding: 8px; font-size: 12px; color: var(--dsw-alias-label-secondary); }
     `;
 
     function useObservable(observable) {
@@ -456,17 +471,48 @@ window.__ModuleLoader__.load({
         ]));
       }
 
+      const openAll = () => {
+        if (layout && typeof layout.selectPanel === 'function') layout.selectPanel(PANEL_ID);
+      };
+
+      const tab = h('button', {
+        key: 'tab', type: 'button',
+        className: `${NS}-tab${expanded ? '' : ' closed'}`,
+        'aria-expanded': expanded,
+        title: expanded ? t('collapse') : t('expand'),
+        onClick: toggle,
+      }, [
+        h('span', { className: `${NS}-tab-bar`, key: 'bar', 'aria-hidden': true }),
+        h('span', { className: `${NS}-tab-label`, key: 'label' }, t('title')),
+        h('span', { className: `${NS}-tab-count`, key: 'count' }, String(rows.length)),
+        h('span', { className: `${NS}-tab-spacer`, key: 'spacer' }),
+        expanded ? null : h('span', { className: `${NS}-tab-chev`, key: 'chev', 'aria-hidden': true }, '▶'),
+        expanded
+          ? h('span', {
+            className: `${NS}-tab-all`, key: 'all', role: 'link', tabIndex: 0,
+            onClick: (event) => { event.stopPropagation(); openAll(); },
+            onKeyDown: (event) => {
+              if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openAll(); }
+            },
+          }, t('all'))
+          : null,
+        expanded ? h('span', { className: `${NS}-tab-chev open`, key: 'chev2', 'aria-hidden': true }, '▶') : null,
+      ]);
+
+      if (!wide) {
+        // Collapsed rail: one icon that opens the full overview panel.
+        return h('button', {
+          type: 'button', className: `${NS}-tab closed`, style: { width: 36, padding: '0 11px' },
+          title: t('panel'), 'aria-label': t('panel'),
+          onClick: openAll,
+        }, h('span', { className: `${NS}-tab-bar`, 'aria-hidden': true }));
+      }
+
       return h('div', { className: `${NS}-side` }, [
-        h('button', {
-          key: 'head', type: 'button', className: `${NS}-side-head`,
-          onClick: toggle, 'aria-expanded': expanded,
-        }, [
-          h('span', { className: `${NS}-side-chev${expanded ? ' open' : ''}`, key: 'chev', 'aria-hidden': true }, '▶'),
-          h('span', { key: 'label' }, t('title')),
-          h('span', { className: `${NS}-side-count`, key: 'count' }, String(rows.length)),
-        ]),
+        tab,
         expanded ? (visible.length === 0
-          ? h('div', { className: `${NS}-side-empty`, key: 'empty' }, t('empty'))
+          ? h('div', { className: `${NS}-side-list`, key: 'list' },
+            h('div', { className: `${NS}-side-empty` }, t('empty')))
           : h('div', { className: `${NS}-side-list`, key: 'list' }, visible.map((row) => h('button', {
             key: row.summary.id, type: 'button',
             className: `${NS}-side-row${row.summary.id === currentId ? ' selected' : ''}`,
@@ -501,6 +547,7 @@ window.__ModuleLoader__.load({
       panel: '全部会话', title: '最近会话', search: '搜索会话或工作区…',
       empty: '还没有会话', noMatch: '没有匹配的会话', ungrouped: '未分组',
       showMore: '显示更多', showLess: '收起', count: '{n} 个会话',
+      all: '全部', expand: '展开最近会话', collapse: '收起最近会话',
       pin: '置顶', unpin: '取消置顶', rename: '重命名', fork: '创建分支',
       copyTitle: '复制标题', copyId: '复制会话 ID',
       archive: '归档', unarchive: '取消归档', ok: '确定', cancel: '取消',
@@ -509,6 +556,7 @@ window.__ModuleLoader__.load({
       panel: 'All sessions', title: 'Recent sessions', search: 'Search sessions or workspaces…',
       empty: 'No sessions yet', noMatch: 'No matching sessions', ungrouped: 'Ungrouped',
       showMore: 'Show more', showLess: 'Show less', count: '{n} sessions',
+      all: 'All', expand: 'Expand recent sessions', collapse: 'Collapse recent sessions',
       pin: 'Pin', unpin: 'Unpin', rename: 'Rename', fork: 'Fork',
       copyTitle: 'Copy Title', copyId: 'Copy Session ID',
       archive: 'Archive', unarchive: 'Unarchive', ok: 'OK', cancel: 'Cancel',
