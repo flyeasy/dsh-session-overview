@@ -100,35 +100,30 @@ window.__ModuleLoader__.load({
       .${NS}-grip i { display: block; width: 30px; height: 3px; border-radius: 2px;
         background: var(--dsw-alias-border-l2); transition: background 0.12s ease; }
       .${NS}-grip:hover i, .${NS}-grip.dragging i { background: var(--dsw-alias-label-secondary); }
-      .${NS}-tab { position: relative; display: flex; align-items: center; gap: 6px;
-        width: fit-content; max-width: calc(100% - 8px); height: 30px; box-sizing: border-box;
-        margin-left: 0; padding: 0 16px 0 9px; font: inherit; font-size: 14px; font-weight: 600;
+      .${NS}-tab { display: flex; align-items: center; gap: 6px;
+        width: fit-content; max-width: 100%; height: 30px; box-sizing: border-box;
+        margin: 0 0 -1px; padding: 0 12px 0 9px; font: inherit; font-size: 14px; font-weight: 600;
         color: var(--dsw-alias-label-primary);
         background: var(--dso-tab-fill); border: 1px solid var(--dso-tab-edge); border-bottom: none;
-        border-radius: 10px 8px 0 0; cursor: pointer; text-align: left; z-index: 2; }
+        border-radius: 10px 10px 0 0; cursor: pointer; text-align: left; position: relative; z-index: 2; }
       .${NS}-tab:hover { background: var(--dso-tab-fill-hover); }
       .${NS}-tab:focus-visible { outline: var(--dsw-focus-ring-width, 2px) solid var(--dsw-alias-brand-primary); outline-offset: -2px; }
-      /* the folded corner where the tab slides into the card */
-      .${NS}-tab::after { content: ''; position: absolute; right: -1px; bottom: 0; width: 9px; height: 100%;
-        background: linear-gradient(135deg, transparent 0 49%, var(--dso-card-fill) 50% 100%);
-        pointer-events: none; }
-      .${NS}-tab.closed { border-bottom: 1px solid var(--dso-tab-edge); border-radius: 10px;
-        box-shadow: 0 1px 2px color-mix(in srgb, var(--dsw-alias-label-primary) 6%, transparent); padding-right: 10px; }
-      .${NS}-tab.closed::after { display: none; }
+      .${NS}-tab.closed { margin-bottom: 0; border-bottom: 1px solid var(--dso-tab-edge);
+        border-radius: 10px; box-shadow: 0 1px 2px color-mix(in srgb, var(--dsw-alias-label-primary) 6%, transparent); }
       .${NS}-tab-bar { width: 4px; height: 14px; border-radius: 2px; flex: none; background: var(--dso-tab-mark); }
       .${NS}-tab-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .${NS}-tab-count { flex: none; padding: 1px 6px; border-radius: 999px; font-size: 11px; font-weight: 600;
-        color: var(--dsw-alias-label-secondary); background: color-mix(in srgb, var(--dsw-alias-bg-base) 55%, transparent); line-height: 14px; }
-      .${NS}-tab-spacer { flex: 1; min-width: 8px; }
+        color: var(--dsw-alias-label-secondary); background: color-mix(in srgb, var(--dsw-alias-bg-base) 45%, transparent); line-height: 14px; }
+      .${NS}-tab-spacer { flex: 1; min-width: 12px; }
       .${NS}-tab-all { flex: none; padding: 2px 5px; border-radius: 5px; font-size: 11px; font-weight: 500;
         color: var(--dsw-alias-label-secondary); }
       .${NS}-tab-all:hover { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-interactive-bg-hover); }
       .${NS}-tab-chev { flex: none; font-size: 10px; color: var(--dsw-alias-label-secondary); transition: transform 0.15s ease; }
       .${NS}-tab-chev.open { transform: rotate(90deg); }
       .${NS}-side-list { display: flex; flex-direction: column; box-sizing: border-box; padding: 4px;
-        margin-left: 6px; overflow-y: auto; overscroll-behavior: contain;
+        margin: 0; overflow-y: auto; overscroll-behavior: contain;
         background: var(--dso-card-fill); border: 1px solid var(--dsw-alias-border-l1);
-        border-radius: 8px 10px 10px 10px;
+        border-radius: 0 10px 10px 10px;
         box-shadow: 0 1px 2px color-mix(in srgb, var(--dsw-alias-label-primary) 5%, transparent); }
       .${NS}-side-row { display: flex; align-items: center; gap: 6px; width: 100%; box-sizing: border-box;
         height: 32px; padding: 0 8px; font: inherit; font-size: 14px; line-height: 22px; color: inherit;
