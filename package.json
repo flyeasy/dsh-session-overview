@@ -1,6 +1,6 @@
 {
   "name": "dsh-session-overview",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Recent-sessions overview for the DeepSeek Harness web client: one list across all workspaces with color-coded workspace badges, a sidebar section, and row menus matching the built-in session actions.",
   "license": "MIT",
   "keywords": [
@@ -16,9 +16,10 @@
     ".": "./index.js",
     "./client": "./client.js",
     "./locale/*.json": "./locale/*.json",
-    "./icon": "./icon.svg"
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
   },
-  "files": ["index.js", "client.js", "cordis.patch.yml", "locale/*.json", "icon.svg", "README.md", "README.zh.md", "LICENSE"],
+  "files": ["index.js", "client.js", "cordis.patch.yml", "locale/*.json", "icon.svg", "README.md", "README.zh.md", "LICENSE", "assets/*.png"],
   "dsh": {
     "bundle": { "patch": "./cordis.patch.yml" },
     "client": {
