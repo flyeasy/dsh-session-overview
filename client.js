@@ -104,11 +104,11 @@ window.__ModuleLoader__.load({
         width: fit-content; max-width: 100%; height: 30px; box-sizing: border-box;
         margin: 0 0 -1px; padding: 0 12px 0 9px; font: inherit; font-size: 14px; font-weight: 600;
         color: var(--dsw-alias-label-primary);
-        background: var(--dso-tab-fill); border: 1px solid var(--dso-tab-edge); border-bottom: none;
+        background: var(--dso-tab-fill); border: 1px solid var(--dsw-alias-border-l1); border-bottom: none;
         border-radius: 10px 10px 0 0; cursor: pointer; text-align: left; position: relative; z-index: 2; }
       .${NS}-tab:hover { background: var(--dso-tab-fill-hover); }
       .${NS}-tab:focus-visible { outline: var(--dsw-focus-ring-width, 2px) solid var(--dsw-alias-brand-primary); outline-offset: -2px; }
-      .${NS}-tab.closed { margin-bottom: 0; border-bottom: 1px solid var(--dso-tab-edge);
+      .${NS}-tab.closed { margin-bottom: 0; border-bottom: 1px solid var(--dsw-alias-border-l1);
         border-radius: 10px; box-shadow: 0 1px 2px color-mix(in srgb, var(--dsw-alias-label-primary) 6%, transparent); }
       .${NS}-tab-bar { width: 4px; height: 14px; border-radius: 2px; flex: none; background: var(--dso-tab-mark); }
       .${NS}-tab-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
