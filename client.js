@@ -88,11 +88,11 @@ window.__ModuleLoader__.load({
       .${NS}-side-chev { flex: none; transition: transform 0.15s ease; font-size: 10px; }
       .${NS}-side-chev.open { transform: rotate(90deg); }
       .${NS}-side-count { margin-left: auto; font-weight: 400; opacity: 0.7; }
-      .${NS}-side-list { display: flex; flex-direction: column; padding-bottom: 6px; }
-      .${NS}-side-row { display: flex; align-items: center; gap: 8px; width: 100%; box-sizing: border-box; text-align: left;
-        padding: 6px 14px 6px 18px; font: inherit; font-size: 14px; line-height: 22px; color: inherit; background: transparent;
-        border: none; cursor: pointer; }
-      .${NS}-side-row:hover { background: var(--dsw-alias-bg-layer-2); }
+      .${NS}-side-list { display: flex; flex-direction: column; padding: 2px 0 6px; max-height: 238px; overflow-y: auto; overscroll-behavior: contain; }
+      .${NS}-side-row { display: flex; align-items: center; gap: 6px; width: calc(100% - 8px); box-sizing: border-box; text-align: left;
+        height: 32px; margin: 0 4px; padding: 0 8px; font: inherit; font-size: 14px; color: inherit; background: transparent;
+        border: none; border-radius: var(--dsw-radius-md); cursor: pointer; }
+      .${NS}-side-row:hover { background: var(--dsw-alias-interactive-bg-hover); }
       .${NS}-side-row.selected { background: color-mix(in srgb, var(--dsw-alias-brand-primary) 9%, transparent); }
       .${NS}-side-row.selected:hover { background: color-mix(in srgb, var(--dsw-alias-brand-primary) 14%, transparent); }
       .${NS}-side-row-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -125,14 +125,22 @@ window.__ModuleLoader__.load({
       ]);
     }
 
-    /** Spinning open ring marking a running session. */
-    function RunMark(key) {
-      return h('span', { className: `${NS}-run`, key }, h('svg', {
+    /** Spinning open ring marking a running session, tinted with its workspace color. */
+    function RunMark(key, color) {
+      return h('span', {
+        className: `${NS}-run`, key,
+        style: color ? { color } : undefined,
+      }, h('svg', {
         viewBox: '0 0 10 10', width: 10, height: 10, 'aria-hidden': true,
       }, h('circle', {
         cx: 5, cy: 5, r: 3.5, fill: 'none', stroke: 'currentColor',
         'stroke-width': 1.8, 'stroke-linecap': 'round', 'stroke-dasharray': '16 6',
       })));
+    }
+
+    /** The badge color for one workspace, or its derived fallback. */
+    function workspaceHue(workspace) {
+      return `hsl(${workspace ? workspace.color.hue : 0}, 65%, 55%)`;
     }
 
     /** Recent non-blank, non-subagent sessions, newest first, each mapped to its workspace. */
@@ -155,7 +163,18 @@ window.__ModuleLoader__.load({
         for (const sessionId of sessionList.ids || []) {
           const summary = sessionList.byId[sessionId];
           if (!summary || summary.blank || summary.origin === 'subagent') continue;
-          rows.push({ summary, workspace: workspaceBySession.get(sessionId) });
+          // Sessions opened from a folder that is not a registered workspace still
+          // belong to a project: derive the badge from their working directory.
+          const workspace = workspaceBySession.get(sessionId)
+            || (summary.cwd
+              ? {
+                label: basenameOf(summary.cwd),
+                path: summary.cwd,
+                color: workspaceColor(summary.cwd),
+                derived: true,
+              }
+              : undefined);
+          rows.push({ summary, workspace });
         }
       }
       rows.sort((a, b) => b.summary.updatedAt - a.summary.updatedAt);
@@ -357,7 +376,7 @@ window.__ModuleLoader__.load({
             },
             onContextMenu: (event) => menu.onRowContextMenu(event, row),
           }, [
-            row.summary.running ? RunMark('run') : null,
+            row.summary.running ? RunMark('run', workspaceHue(row.workspace)) : null,
             h('span', { className: `${NS}-row-title${row.summary.running ? ' running' : ''}`, key: 'title' },
               row.summary.title || row.summary.displayTitle || row.summary.id),
             h('span', { className: `${NS}-row-time`, key: 'time' }, relativeTime(row.summary.updatedAt)),
@@ -371,7 +390,7 @@ window.__ModuleLoader__.load({
               h('span', {
                 className: `${NS}-badge-dot`, key: 'dot',
                 style: {
-                  background: `hsl(${row.workspace ? row.workspace.color.hue : 0}, 65%, 55%)`,
+                  background: workspaceHue(row.workspace),
                   opacity: row.workspace ? 1 : 0.4,
                 },
               }),
@@ -395,7 +414,6 @@ window.__ModuleLoader__.load({
       ]);
     }
 
-    const SIDE_LIMIT = 10;
     const SIDE_EXPAND_KEY = `${NS}.sidebar-expanded`;
 
     /** Expandable recent-sessions section rendered at the sidebar foot, above Settings. */
@@ -418,7 +436,8 @@ window.__ModuleLoader__.load({
       const { rows, pinnedIds, archivedIds } = useRecentRows(ctx);
       const currentId = useCurrentSessionId(ctx);
       const menu = useSessionMenu(ctx, pinnedIds, archivedIds);
-      const visible = rows.slice(0, SIDE_LIMIT);
+      // The list scrolls, so every session is reachable; the cap only bounds the DOM.
+      const visible = rows.slice(0, 300);
 
       if (!wide) {
         // Collapsed rail: one icon that opens the full overview panel.
@@ -461,11 +480,11 @@ window.__ModuleLoader__.load({
             onContextMenu: (event) => menu.onRowContextMenu(event, row),
           }, [
             row.summary.running
-              ? RunMark('run')
+              ? RunMark('run', workspaceHue(row.workspace))
               : h('span', {
                 className: `${NS}-side-dot`, key: 'dot',
                 style: {
-                  background: row.workspace ? `hsl(${row.workspace.color.hue}, 65%, 55%)` : 'transparent',
+                  background: row.workspace ? workspaceHue(row.workspace) : 'transparent',
                   border: row.workspace ? 'none' : '1px solid var(--dsw-alias-border-l2)',
                 },
               }),
