@@ -80,13 +80,13 @@ window.__ModuleLoader__.load({
       .${NS}-more:hover { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-2); }
       .${NS}-side { margin-top: 8px;
         --dso-card-fill: var(--dsw-alias-bg-layer-1);
-        --dso-tab-fill: color-mix(in srgb, var(--dsw-alias-label-secondary) 14%, var(--dsw-alias-bg-layer-1));
-        --dso-tab-fill-hover: color-mix(in srgb, var(--dsw-alias-label-secondary) 22%, var(--dsw-alias-bg-layer-1));
+        --dso-tab-fill: color-mix(in srgb, var(--dsw-alias-label-secondary) 26%, var(--dsw-alias-bg-layer-1));
+        --dso-tab-fill-hover: color-mix(in srgb, var(--dsw-alias-label-secondary) 34%, var(--dsw-alias-bg-layer-1));
         --dso-tab-edge: var(--dsw-alias-border-l1);
         --dso-tab-mark: var(--dsw-alias-label-secondary); }
       .${NS}-side.is-running {
-        --dso-tab-fill: color-mix(in srgb, var(--dsw-alias-state-success-primary) 18%, var(--dsw-alias-bg-layer-1));
-        --dso-tab-fill-hover: color-mix(in srgb, var(--dsw-alias-state-success-primary) 26%, var(--dsw-alias-bg-layer-1));
+        --dso-tab-fill: color-mix(in srgb, var(--dsw-alias-state-success-primary) 24%, var(--dsw-alias-bg-layer-1));
+        --dso-tab-fill-hover: color-mix(in srgb, var(--dsw-alias-state-success-primary) 32%, var(--dsw-alias-bg-layer-1));
         --dso-tab-edge: color-mix(in srgb, var(--dsw-alias-state-success-primary) 38%, var(--dsw-alias-border-l1));
         --dso-tab-mark: var(--dsw-alias-state-success-primary); }
       .${NS}-side.is-waiting {
@@ -115,11 +115,13 @@ window.__ModuleLoader__.load({
       .${NS}-tab-count { flex: none; padding: 1px 6px; border-radius: 999px; font-size: 11px; font-weight: 600;
         color: var(--dsw-alias-label-secondary); background: color-mix(in srgb, var(--dsw-alias-bg-base) 45%, transparent); line-height: 14px; }
       .${NS}-tab-spacer { flex: 1; min-width: 12px; }
-      .${NS}-tab-all { flex: none; padding: 2px 5px; border-radius: 5px; font-size: 11px; font-weight: 500;
-        color: var(--dsw-alias-label-secondary); }
-      .${NS}-tab-all:hover { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-interactive-bg-hover); }
-      .${NS}-tab-chev { flex: none; font-size: 10px; color: var(--dsw-alias-label-secondary); transition: transform 0.15s ease; }
-      .${NS}-tab-chev.open { transform: rotate(90deg); }
+      .${NS}-tab-chev { display: inline-flex; align-items: center; justify-content: center; flex: none;
+        width: 22px; height: 22px; margin-right: -4px; border-radius: 6px;
+        color: var(--dsw-alias-label-secondary); transition: background 0.12s ease, color 0.12s ease; }
+      .${NS}-tab:hover .${NS}-tab-chev { background: color-mix(in srgb, var(--dsw-alias-bg-base) 55%, transparent);
+        color: var(--dsw-alias-label-primary); }
+      .${NS}-tab-chev svg { display: block; transition: transform 0.15s ease; }
+      .${NS}-tab-chev.open svg { transform: rotate(90deg); }
       .${NS}-side-list { display: flex; flex-direction: column; box-sizing: border-box; padding: 4px;
         margin: 0; overflow-y: auto; overscroll-behavior: contain;
         background: var(--dso-card-fill); border: 1px solid var(--dsw-alias-border-l1);
@@ -533,6 +535,15 @@ window.__ModuleLoader__.load({
         }, h('span', { className: `${NS}-tab-bar`, 'aria-hidden': true }));
       }
 
+      const chevron = h('span', {
+        className: `${NS}-tab-chev${expanded ? ' open' : ''}`, key: 'chev', 'aria-hidden': true,
+      }, h('svg', {
+        viewBox: '0 0 16 16', width: 14, height: 14, fill: 'none',
+      }, h('path', {
+        d: 'M6 3.5 L10.5 8 L6 12.5', stroke: 'currentColor', 'stroke-width': 1.9,
+        'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+      })));
+
       const tab = h('button', {
         key: 'tab', type: 'button',
         className: `${NS}-tab${expanded ? '' : ' closed'}`,
@@ -544,18 +555,7 @@ window.__ModuleLoader__.load({
         h('span', { className: `${NS}-tab-label`, key: 'label' }, t('title')),
         h('span', { className: `${NS}-tab-count`, key: 'count' }, String(rows.length)),
         h('span', { className: `${NS}-tab-spacer`, key: 'spacer' }),
-        expanded
-          ? h('span', {
-            className: `${NS}-tab-all`, key: 'all', role: 'link', tabIndex: 0,
-            onClick: (event) => { event.stopPropagation(); openAll(); },
-            onKeyDown: (event) => {
-              if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openAll(); }
-            },
-          }, t('all'))
-          : null,
-        h('span', {
-          className: `${NS}-tab-chev${expanded ? ' open' : ''}`, key: 'chev', 'aria-hidden': true,
-        }, '▶'),
+        chevron,
       ]);
 
       return h('div', {
