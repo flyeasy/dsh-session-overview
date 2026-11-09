@@ -78,31 +78,57 @@ window.__ModuleLoader__.load({
         color: var(--dsw-alias-label-secondary); background: var(--dsw-alias-bg-layer-1);
         border: 1px solid var(--dsw-alias-border-l1); border-radius: 999px; cursor: pointer; }
       .${NS}-more:hover { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-2); }
-      .${NS}-side { margin-top: 10px; }
-      /* ---- pull-out archive card ---- */
-      .${NS}-tab { display: flex; align-items: center; gap: 6px; width: 100%; box-sizing: border-box;
-        height: 30px; padding: 0 8px 0 9px; font: inherit; font-size: 14px; font-weight: 600;
-        color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-1);
-        border: 1px solid var(--dsw-alias-border-l1); border-bottom: none; border-radius: 10px 10px 0 0;
-        cursor: pointer; text-align: left; }
-      .${NS}-tab:hover { background: var(--dsw-alias-bg-layer-2); }
+      .${NS}-side { margin-top: 8px;
+        --dso-card-fill: var(--dsw-alias-bg-layer-1);
+        --dso-tab-fill: color-mix(in srgb, var(--dsw-alias-label-secondary) 14%, var(--dsw-alias-bg-layer-1));
+        --dso-tab-fill-hover: color-mix(in srgb, var(--dsw-alias-label-secondary) 22%, var(--dsw-alias-bg-layer-1));
+        --dso-tab-edge: var(--dsw-alias-border-l1);
+        --dso-tab-mark: var(--dsw-alias-label-secondary); }
+      .${NS}-side.is-running {
+        --dso-tab-fill: color-mix(in srgb, var(--dsw-alias-state-success-primary) 18%, var(--dsw-alias-bg-layer-1));
+        --dso-tab-fill-hover: color-mix(in srgb, var(--dsw-alias-state-success-primary) 26%, var(--dsw-alias-bg-layer-1));
+        --dso-tab-edge: color-mix(in srgb, var(--dsw-alias-state-success-primary) 38%, var(--dsw-alias-border-l1));
+        --dso-tab-mark: var(--dsw-alias-state-success-primary); }
+      .${NS}-side.is-waiting {
+        --dso-tab-fill: color-mix(in srgb, var(--dsw-alias-state-warn-primary) 20%, var(--dsw-alias-bg-layer-1));
+        --dso-tab-fill-hover: color-mix(in srgb, var(--dsw-alias-state-warn-primary) 28%, var(--dsw-alias-bg-layer-1));
+        --dso-tab-edge: color-mix(in srgb, var(--dsw-alias-state-warn-primary) 40%, var(--dsw-alias-border-l1));
+        --dso-tab-mark: var(--dsw-alias-state-warn-primary); }
+      /* ---- OneNote-style section tab + archive card ---- */
+      .${NS}-grip { display: flex; align-items: center; justify-content: center; height: 9px;
+        cursor: ns-resize; touch-action: none; }
+      .${NS}-grip i { display: block; width: 30px; height: 3px; border-radius: 2px;
+        background: var(--dsw-alias-border-l2); transition: background 0.12s ease; }
+      .${NS}-grip:hover i, .${NS}-grip.dragging i { background: var(--dsw-alias-label-secondary); }
+      .${NS}-tab { position: relative; display: flex; align-items: center; gap: 6px;
+        width: fit-content; max-width: calc(100% - 8px); height: 30px; box-sizing: border-box;
+        margin-left: 0; padding: 0 16px 0 9px; font: inherit; font-size: 14px; font-weight: 600;
+        color: var(--dsw-alias-label-primary);
+        background: var(--dso-tab-fill); border: 1px solid var(--dso-tab-edge); border-bottom: none;
+        border-radius: 10px 8px 0 0; cursor: pointer; text-align: left; z-index: 2; }
+      .${NS}-tab:hover { background: var(--dso-tab-fill-hover); }
       .${NS}-tab:focus-visible { outline: var(--dsw-focus-ring-width, 2px) solid var(--dsw-alias-brand-primary); outline-offset: -2px; }
-      .${NS}-tab.closed { height: 34px; border-bottom: 1px solid var(--dsw-alias-border-l1);
-        border-radius: 10px; box-shadow: 0 1px 2px color-mix(in srgb, var(--dsw-alias-label-primary) 5%, transparent); }
-      .${NS}-tab-bar { width: 4px; height: 14px; border-radius: 2px; flex: none; background: var(--dsw-alias-brand-primary); }
+      /* the folded corner where the tab slides into the card */
+      .${NS}-tab::after { content: ''; position: absolute; right: -1px; bottom: 0; width: 9px; height: 100%;
+        background: linear-gradient(135deg, transparent 0 49%, var(--dso-card-fill) 50% 100%);
+        pointer-events: none; }
+      .${NS}-tab.closed { border-bottom: 1px solid var(--dso-tab-edge); border-radius: 10px;
+        box-shadow: 0 1px 2px color-mix(in srgb, var(--dsw-alias-label-primary) 6%, transparent); padding-right: 10px; }
+      .${NS}-tab.closed::after { display: none; }
+      .${NS}-tab-bar { width: 4px; height: 14px; border-radius: 2px; flex: none; background: var(--dso-tab-mark); }
       .${NS}-tab-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .${NS}-tab-count { flex: none; padding: 1px 6px; border-radius: 999px; font-size: 11px; font-weight: 600;
-        color: var(--dsw-alias-label-secondary); background: var(--dsw-alias-bg-layer-2); line-height: 14px; }
-      .${NS}-tab-spacer { flex: 1; }
+        color: var(--dsw-alias-label-secondary); background: color-mix(in srgb, var(--dsw-alias-bg-base) 55%, transparent); line-height: 14px; }
+      .${NS}-tab-spacer { flex: 1; min-width: 8px; }
       .${NS}-tab-all { flex: none; padding: 2px 5px; border-radius: 5px; font-size: 11px; font-weight: 500;
         color: var(--dsw-alias-label-secondary); }
       .${NS}-tab-all:hover { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-interactive-bg-hover); }
       .${NS}-tab-chev { flex: none; font-size: 10px; color: var(--dsw-alias-label-secondary); transition: transform 0.15s ease; }
       .${NS}-tab-chev.open { transform: rotate(90deg); }
       .${NS}-side-list { display: flex; flex-direction: column; box-sizing: border-box; padding: 4px;
-        max-height: 232px; overflow-y: auto; overscroll-behavior: contain;
-        background: var(--dsw-alias-bg-layer-1); border: 1px solid var(--dsw-alias-border-l1); border-top: none;
-        border-radius: 0 10px 10px 10px;
+        margin-left: 6px; overflow-y: auto; overscroll-behavior: contain;
+        background: var(--dso-card-fill); border: 1px solid var(--dsw-alias-border-l1);
+        border-radius: 8px 10px 10px 10px;
         box-shadow: 0 1px 2px color-mix(in srgb, var(--dsw-alias-label-primary) 5%, transparent); }
       .${NS}-side-row { display: flex; align-items: center; gap: 6px; width: 100%; box-sizing: border-box;
         height: 32px; padding: 0 8px; font: inherit; font-size: 14px; line-height: 22px; color: inherit;
@@ -431,7 +457,19 @@ window.__ModuleLoader__.load({
 
     const SIDE_EXPAND_KEY = `${NS}.sidebar-expanded`;
 
-    /** Expandable recent-sessions section rendered at the sidebar foot, above Settings. */
+    const SIDE_HEIGHT_KEY = `${NS}.sidebar-height`;
+    const SIDE_MIN_ROWS = 3;
+    const ROW_PX = 32;
+    const LIST_CHROME_PX = 8; // list padding top + bottom
+
+    function clampHeight(px) {
+      const min = SIDE_MIN_ROWS * ROW_PX + LIST_CHROME_PX;
+      const viewport = (typeof window !== 'undefined' && window.innerHeight) || 800;
+      const max = Math.max(min, Math.round(viewport * 0.58) - 72);
+      return Math.max(min, Math.min(max, Math.round(px)));
+    }
+
+    /** Expandable recent-sessions card rendered at the sidebar foot, above Settings. */
     function SidebarRecent(props) {
       const ctx = this && this.ctx;
       const t = ctx.locale.bind(NS);
@@ -448,32 +486,57 @@ window.__ModuleLoader__.load({
         return next;
       });
 
+      const [listHeight, setListHeight] = React.useState(() => {
+        let stored = 0;
+        try { stored = Number(window.localStorage.getItem(SIDE_HEIGHT_KEY)) || 0; } catch { /* private mode */ }
+        return clampHeight(stored || 7 * ROW_PX + LIST_CHROME_PX);
+      });
+      const [dragging, setDragging] = React.useState(false);
+
+      const startDrag = (event) => {
+        event.preventDefault();
+        const startY = event.clientY;
+        const startHeight = listHeight;
+        setDragging(true);
+        const onMove = (moveEvent) => {
+          // Dragging the handle up grows the list; the card is anchored to the foot.
+          setListHeight(clampHeight(startHeight + (startY - moveEvent.clientY)));
+        };
+        const onUp = () => {
+          setDragging(false);
+          window.removeEventListener('mousemove', onMove);
+          window.removeEventListener('mouseup', onUp);
+          try {
+            setListHeight((current) => {
+              window.localStorage.setItem(SIDE_HEIGHT_KEY, String(current));
+              return current;
+            });
+          } catch { /* private mode */ }
+        };
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onUp);
+      };
+
       const { rows, pinnedIds, archivedIds } = useRecentRows(ctx);
       const currentId = useCurrentSessionId(ctx);
       const menu = useSessionMenu(ctx, pinnedIds, archivedIds);
       // The list scrolls, so every session is reachable; the cap only bounds the DOM.
       const visible = rows.slice(0, 300);
-
-      if (!wide) {
-        // Collapsed rail: one icon that opens the full overview panel.
-        return h('button', {
-          type: 'button', className: `${NS}-side-head`, style: { padding: '8px 12px' },
-          title: t('panel'), 'aria-label': t('panel'),
-          onClick: () => { if (layout && typeof layout.selectPanel === 'function') layout.selectPanel(PANEL_ID); },
-        }, h('svg', {
-          viewBox: '0 0 64 64', width: 16, height: 16, 'aria-hidden': true,
-          style: { display: 'block', color: 'var(--dsw-alias-label-secondary)' },
-        }, [
-          h('rect', { x: 6, y: 6, width: 52, height: 52, rx: 12, fill: 'none', stroke: 'currentColor', 'stroke-width': 5 }),
-          h('rect', { x: 16, y: 20, width: 20, height: 5, rx: 2, fill: 'currentColor' }),
-          h('rect', { x: 16, y: 31, width: 26, height: 5, rx: 2, fill: 'currentColor', opacity: 0.7 }),
-          h('rect', { x: 16, y: 42, width: 16, height: 5, rx: 2, fill: 'currentColor', opacity: 0.7 }),
-        ]));
-      }
+      const anyRunning = rows.some((row) => row.summary.running);
 
       const openAll = () => {
         if (layout && typeof layout.selectPanel === 'function') layout.selectPanel(PANEL_ID);
       };
+
+      if (!wide) {
+        // Collapsed rail: one tab-shaped button that opens the full overview panel.
+        return h('button', {
+          type: 'button', className: `${NS}-tab closed`,
+          style: { width: 36, padding: '0 11px' },
+          title: t('panel'), 'aria-label': t('panel'),
+          onClick: openAll,
+        }, h('span', { className: `${NS}-tab-bar`, 'aria-hidden': true }));
+      }
 
       const tab = h('button', {
         key: 'tab', type: 'button',
@@ -486,7 +549,6 @@ window.__ModuleLoader__.load({
         h('span', { className: `${NS}-tab-label`, key: 'label' }, t('title')),
         h('span', { className: `${NS}-tab-count`, key: 'count' }, String(rows.length)),
         h('span', { className: `${NS}-tab-spacer`, key: 'spacer' }),
-        expanded ? null : h('span', { className: `${NS}-tab-chev`, key: 'chev', 'aria-hidden': true }, '▶'),
         expanded
           ? h('span', {
             className: `${NS}-tab-all`, key: 'all', role: 'link', tabIndex: 0,
@@ -496,24 +558,24 @@ window.__ModuleLoader__.load({
             },
           }, t('all'))
           : null,
-        expanded ? h('span', { className: `${NS}-tab-chev open`, key: 'chev2', 'aria-hidden': true }, '▶') : null,
+        h('span', {
+          className: `${NS}-tab-chev${expanded ? ' open' : ''}`, key: 'chev', 'aria-hidden': true,
+        }, '▶'),
       ]);
 
-      if (!wide) {
-        // Collapsed rail: one icon that opens the full overview panel.
-        return h('button', {
-          type: 'button', className: `${NS}-tab closed`, style: { width: 36, padding: '0 11px' },
-          title: t('panel'), 'aria-label': t('panel'),
-          onClick: openAll,
-        }, h('span', { className: `${NS}-tab-bar`, 'aria-hidden': true }));
-      }
-
-      return h('div', { className: `${NS}-side` }, [
+      return h('div', {
+        className: `${NS}-side${anyRunning ? ' is-running' : ''}`,
+      }, [
+        expanded ? h('div', {
+          key: 'grip', className: `${NS}-grip${dragging ? ' dragging' : ''}`,
+          title: t('resize'), role: 'separator', 'aria-orientation': 'horizontal',
+          onMouseDown: startDrag, onDoubleClick: () => setListHeight(clampHeight(7 * ROW_PX + LIST_CHROME_PX)),
+        }, h('i', null)) : null,
         tab,
         expanded ? (visible.length === 0
-          ? h('div', { className: `${NS}-side-list`, key: 'list' },
+          ? h('div', { key: 'list', className: `${NS}-side-list`, style: { height: listHeight } },
             h('div', { className: `${NS}-side-empty` }, t('empty')))
-          : h('div', { className: `${NS}-side-list`, key: 'list' }, visible.map((row) => h('button', {
+          : h('div', { key: 'list', className: `${NS}-side-list`, style: { height: listHeight } }, visible.map((row) => h('button', {
             key: row.summary.id, type: 'button',
             className: `${NS}-side-row${row.summary.id === currentId ? ' selected' : ''}`,
             'aria-current': row.summary.id === currentId || undefined,
@@ -547,7 +609,7 @@ window.__ModuleLoader__.load({
       panel: '全部会话', title: '最近会话', search: '搜索会话或工作区…',
       empty: '还没有会话', noMatch: '没有匹配的会话', ungrouped: '未分组',
       showMore: '显示更多', showLess: '收起', count: '{n} 个会话',
-      all: '全部', expand: '展开最近会话', collapse: '收起最近会话',
+      all: '全部', expand: '展开最近会话', collapse: '收起最近会话', resize: '拖动调整高度（双击复位）',
       pin: '置顶', unpin: '取消置顶', rename: '重命名', fork: '创建分支',
       copyTitle: '复制标题', copyId: '复制会话 ID',
       archive: '归档', unarchive: '取消归档', ok: '确定', cancel: '取消',
@@ -556,7 +618,7 @@ window.__ModuleLoader__.load({
       panel: 'All sessions', title: 'Recent sessions', search: 'Search sessions or workspaces…',
       empty: 'No sessions yet', noMatch: 'No matching sessions', ungrouped: 'Ungrouped',
       showMore: 'Show more', showLess: 'Show less', count: '{n} sessions',
-      all: 'All', expand: 'Expand recent sessions', collapse: 'Collapse recent sessions',
+      all: 'All', expand: 'Expand recent sessions', collapse: 'Collapse recent sessions', resize: 'Drag to resize (double-click to reset)',
       pin: 'Pin', unpin: 'Unpin', rename: 'Rename', fork: 'Fork',
       copyTitle: 'Copy Title', copyId: 'Copy Session ID',
       archive: 'Archive', unarchive: 'Unarchive', ok: 'OK', cancel: 'Cancel',
