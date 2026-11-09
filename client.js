@@ -78,7 +78,7 @@ window.__ModuleLoader__.load({
         color: var(--dsw-alias-label-secondary); background: var(--dsw-alias-bg-layer-1);
         border: 1px solid var(--dsw-alias-border-l1); border-radius: 999px; cursor: pointer; }
       .${NS}-more:hover { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-2); }
-      .${NS}-side { margin-top: 8px;
+      .${NS}-side { width: 100%; min-width: 0; flex: 1 1 100%; box-sizing: border-box; margin-top: 8px;
         --dso-card-fill: var(--dsw-alias-bg-layer-1);
         --dso-tab-fill: color-mix(in srgb, var(--dsw-alias-label-secondary) 26%, var(--dsw-alias-bg-layer-1));
         --dso-tab-fill-hover: color-mix(in srgb, var(--dsw-alias-label-secondary) 34%, var(--dsw-alias-bg-layer-1));
@@ -122,7 +122,7 @@ window.__ModuleLoader__.load({
         color: var(--dsw-alias-label-primary); }
       .${NS}-tab-chev svg { display: block; transition: transform 0.15s ease; }
       .${NS}-tab-chev.open svg { transform: rotate(90deg); }
-      .${NS}-side-list { display: flex; flex-direction: column; box-sizing: border-box; padding: 4px;
+      .${NS}-side-list { display: flex; flex-direction: column; gap: 2px; box-sizing: border-box; padding: 4px;
         margin: 0; overflow-y: auto; overscroll-behavior: contain;
         background: var(--dso-card-fill); border: 1px solid var(--dsw-alias-border-l1);
         border-radius: 0 10px 10px 10px;
@@ -457,10 +457,13 @@ window.__ModuleLoader__.load({
     const SIDE_HEIGHT_KEY = `${NS}.sidebar-height`;
     const SIDE_MIN_ROWS = 3;
     const ROW_PX = 32;
+    const ROW_GAP_PX = 2;
     const LIST_CHROME_PX = 8; // list padding top + bottom
 
+    const rowsHeight = (count) => count * ROW_PX + Math.max(0, count - 1) * ROW_GAP_PX + LIST_CHROME_PX;
+
     function clampHeight(px) {
-      const min = SIDE_MIN_ROWS * ROW_PX + LIST_CHROME_PX;
+      const min = rowsHeight(SIDE_MIN_ROWS);
       const viewport = (typeof window !== 'undefined' && window.innerHeight) || 800;
       const max = Math.max(min, Math.round(viewport * 0.58) - 72);
       return Math.max(min, Math.min(max, Math.round(px)));
@@ -486,7 +489,7 @@ window.__ModuleLoader__.load({
       const [listHeight, setListHeight] = React.useState(() => {
         let stored = 0;
         try { stored = Number(window.localStorage.getItem(SIDE_HEIGHT_KEY)) || 0; } catch { /* private mode */ }
-        return clampHeight(stored || 7 * ROW_PX + LIST_CHROME_PX);
+        return clampHeight(stored || rowsHeight(7));
       });
       const [dragging, setDragging] = React.useState(false);
 
@@ -564,7 +567,7 @@ window.__ModuleLoader__.load({
         expanded ? h('div', {
           key: 'grip', className: `${NS}-grip${dragging ? ' dragging' : ''}`,
           title: t('resize'), role: 'separator', 'aria-orientation': 'horizontal',
-          onMouseDown: startDrag, onDoubleClick: () => setListHeight(clampHeight(7 * ROW_PX + LIST_CHROME_PX)),
+          onMouseDown: startDrag, onDoubleClick: () => setListHeight(clampHeight(rowsHeight(7))),
         }, h('i', null)) : null,
         tab,
         expanded ? (visible.length === 0
