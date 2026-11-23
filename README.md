@@ -15,6 +15,7 @@ The built-in sidebar groups sessions under their workspaces, so finding "that se
 - **Sidebar section** — an expandable "Recent sessions" block above the sidebar foot showing the 10 most recent sessions; collapse state persists.
 - **Full panel** — a "All sessions" icon in the sidebar rail opens a complete view: search by session title or workspace name, show-more paging, one-click filtering by workspace badge.
 - **Workspace color badges** — a deterministic 10-hue palette hashed from each workspace folder path; the same workspace always carries the same color, everywhere.
+- **Provisional new session** — a session that has not spoken yet (the New Session button, or one created from the API/CLI) appears at the top of the list, labelled “New session”, without waiting for its first message; stale empty placeholders stay hidden.
 - **Selection highlight** — the session currently open in the main area is highlighted in the list, live.
 - **Running spinner** — running sessions show an animated open-ring marker instead of a static dot.
 - **Right-click menu** — the same verbs as the built-in session rows: pin/unpin, rename, fork, copy title / session id, archive/unarchive. All operations go through the same host channels, so state stays in sync with the native sidebar.

@@ -181,7 +181,21 @@ window.__ModuleLoader__.load({
       return `hsl(${workspace ? workspace.color.hue : 0}, 65%, 55%)`;
     }
 
-    /** Recent non-blank, non-subagent sessions, newest first, each mapped to its workspace. */
+    /** A blank session stays listed this long after creation, even when not open. */
+    const BLANK_FRESH_MS = 10 * 60 * 1000;
+    /** At most this many blank placeholders, so the list never fills with ghosts. */
+    const MAX_BLANK_ROWS = 3;
+
+    /**
+     * Recent sessions, newest first, each mapped to its workspace.
+     *
+     * A session is blank until its first message: the provisional "New session"
+     * from the New Session button, and equally a session created from the API/CLI
+     * that has not spoken yet. Blank rows used to be dropped outright, so a brand
+     * new session only appeared after the user typed in it. They are now listed
+     * while they are the open one, or while they are still fresh, and hoisted to
+     * the top like the native provisional row.
+     */
     function useRecentRows(ctx) {
       const sessionsService = ctx.get('sessions');
       const workspacesService = ctx.get('workspaces');
@@ -197,10 +211,15 @@ window.__ModuleLoader__.load({
         }
       }
       const rows = [];
+      let currentSessionId;
       if (sessionList && sessionList.byId) {
         for (const sessionId of sessionList.ids || []) {
           const summary = sessionList.byId[sessionId];
-          if (!summary || summary.blank || summary.origin === 'subagent') continue;
+          if (summary && summary.retainedBy && (summary.retainedBy.mainView ?? 0) > 0) currentSessionId = sessionId;
+        }
+        for (const sessionId of sessionList.ids || []) {
+          const summary = sessionList.byId[sessionId];
+          if (!summary || summary.origin === 'subagent') continue;
           // Sessions opened from a folder that is not a registered workspace still
           // belong to a project: derive the badge from their working directory.
           const workspace = workspaceBySession.get(sessionId)
@@ -212,13 +231,27 @@ window.__ModuleLoader__.load({
                 derived: true,
               }
               : undefined);
-          rows.push({ summary, workspace });
+          rows.push({ summary, workspace, blank: summary.blank === true });
         }
       }
       rows.sort((a, b) => b.summary.updatedAt - a.summary.updatedAt);
+      const now = Date.now();
+      const keptBlanks = rows
+        .filter((row) => row.blank && (row.summary.id === currentSessionId
+          || now - (row.summary.updatedAt || 0) < BLANK_FRESH_MS))
+        .slice(0, MAX_BLANK_ROWS);
+      const ordered = keptBlanks.concat(rows.filter((row) => !row.blank));
       const pinnedIds = new Set(workspaceList && workspaceList.pinnedSessionIds || []);
       const archivedIds = new Set(workspaceList && workspaceList.archivedSessionIds || []);
-      return { rows, pinnedIds, archivedIds };
+      return { rows: ordered, pinnedIds, archivedIds };
+    }
+
+    /** Row label: a provisional New Session has no title yet. */
+    function rowLabel(row, t) {
+      const summary = row.summary;
+      if (summary.title) return summary.title;
+      if (summary.displayTitle) return summary.displayTitle;
+      return summary.blank ? t('untitled') : summary.id;
     }
 
     /** The session currently open in the main area: the one holding the main view reference. */
@@ -338,8 +371,10 @@ window.__ModuleLoader__.load({
 
       const items = [
         { key: 'pin', label: t(pinned ? 'unpin' : 'pin'), action: () => run(pinned ? uiWorkspace.unpinSession(id) : uiWorkspace.pinSession(id)) },
-        { key: 'rename', label: t('rename'), action: () => setState({ kind: 'rename', row, value: title }) },
-        { key: 'fork', label: t('fork'), action: () => run(uiWorkspace.forkSession(id)) },
+        // Rename and fork need a titled conversation / a completed turn; the
+        // native shortcuts block both on a blank session, so match that here.
+        { key: 'rename', label: t('rename'), disabled: row.summary.blank, action: () => setState({ kind: 'rename', row, value: title }) },
+        { key: 'fork', label: t('fork'), disabled: row.summary.blank, action: () => run(uiWorkspace.forkSession(id)) },
         { key: 'sep1', separator: true },
         { key: 'copyTitle', label: t('copyTitle'), disabled: !title, action: () => copyText(title) },
         { key: 'copyId', label: t('copyId'), action: () => copyText(id) },
@@ -384,7 +419,7 @@ window.__ModuleLoader__.load({
       const needle = query.trim().toLowerCase();
       const filtered = needle
         ? rows.filter((row) => {
-          const title = (row.summary.title || row.summary.displayTitle || '').toLowerCase();
+          const title = rowLabel(row, t).toLowerCase();
           const workspaceLabel = row.workspace ? row.workspace.label.toLowerCase() : '';
           return title.includes(needle) || workspaceLabel.includes(needle);
         })
@@ -416,7 +451,7 @@ window.__ModuleLoader__.load({
           }, [
             row.summary.running ? RunMark('run', workspaceHue(row.workspace)) : null,
             h('span', { className: `${NS}-row-title${row.summary.running ? ' running' : ''}`, key: 'title' },
-              row.summary.title || row.summary.displayTitle || row.summary.id),
+              rowLabel(row, t)),
             h('span', { className: `${NS}-row-time`, key: 'time' }, relativeTime(row.summary.updatedAt)),
             h('span', {
               className: `${NS}-badge`, key: 'badge',
@@ -577,8 +612,7 @@ window.__ModuleLoader__.load({
             key: row.summary.id, type: 'button',
             className: `${NS}-side-row${row.summary.id === currentId ? ' selected' : ''}`,
             'aria-current': row.summary.id === currentId || undefined,
-            title: (row.summary.title || row.summary.displayTitle || '')
-              + (row.workspace ? ` · ${row.workspace.path}` : ''),
+            title: rowLabel(row, t) + (row.workspace ? ` · ${row.workspace.path}` : ''),
             onClick: () => {
               if (archivedIds.has(row.summary.id)) return;
               if (uiWorkspace && typeof uiWorkspace.openSession === 'function') uiWorkspace.openSession(row.summary.id);
@@ -595,7 +629,7 @@ window.__ModuleLoader__.load({
                 },
               }),
             h('span', { className: `${NS}-side-row-title${row.summary.running ? ' running' : ''}`, key: 'title' },
-              row.summary.title || row.summary.displayTitle || row.summary.id),
+              rowLabel(row, t)),
             h('span', { className: `${NS}-side-time`, key: 'time' }, relativeTime(row.summary.updatedAt)),
           ]))))
           : null,
@@ -605,7 +639,7 @@ window.__ModuleLoader__.load({
 
     const LOCALE_ZH = {
       panel: '全部会话', title: '最近会话', search: '搜索会话或工作区…',
-      empty: '还没有会话', noMatch: '没有匹配的会话', ungrouped: '未分组',
+      empty: '还没有会话', noMatch: '没有匹配的会话', ungrouped: '未分组', untitled: '新会话',
       showMore: '显示更多', showLess: '收起', count: '{n} 个会话',
       all: '全部', expand: '展开最近会话', collapse: '收起最近会话', resize: '拖动调整高度（双击复位）',
       pin: '置顶', unpin: '取消置顶', rename: '重命名', fork: '创建分支',
@@ -614,7 +648,7 @@ window.__ModuleLoader__.load({
     };
     const LOCALE_EN = {
       panel: 'All sessions', title: 'Recent sessions', search: 'Search sessions or workspaces…',
-      empty: 'No sessions yet', noMatch: 'No matching sessions', ungrouped: 'Ungrouped',
+      empty: 'No sessions yet', noMatch: 'No matching sessions', ungrouped: 'Ungrouped', untitled: 'New session',
       showMore: 'Show more', showLess: 'Show less', count: '{n} sessions',
       all: 'All', expand: 'Expand recent sessions', collapse: 'Collapse recent sessions', resize: 'Drag to resize (double-click to reset)',
       pin: 'Pin', unpin: 'Unpin', rename: 'Rename', fork: 'Fork',

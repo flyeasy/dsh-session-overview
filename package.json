@@ -1,6 +1,6 @@
 {
   "name": "dsh-session-overview",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Recent-sessions overview for the DeepSeek Harness web client: one list across all workspaces with color-coded workspace badges, a sidebar section, and row menus matching the built-in session actions.",
   "license": "MIT",
   "keywords": [
